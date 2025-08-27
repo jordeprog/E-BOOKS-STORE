@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loja de E-Books</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary:    #4A90E2;
+      --accent:     #50E3C2;
+      --danger:     #E94E77;
+      --bg:         #F5F7FA;
+      --card-bg:    #FFFFFF;
+      --text:       #333333;
+      --radius:     8px;
+      --gap:        1.5rem;
+      --transition: 0.3s ease;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    header {
+      background: var(--primary);
+      color: #fff;
+      text-align: center;
+      padding: var(--gap) 0;
+    }
+    header nav {
+      margin-top: .5rem;
+      display: flex;
+      justify-content: center;
+      gap: var(--gap);
+    }
+    header nav button {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      padding: .5rem 1rem;
+      cursor: pointer;
+      transition: background var(--transition);
+      border-radius: var(--radius);
+    }
+    header nav button:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    main {
+      flex: 1;
+      width: 90%;
+      max-width: 1000px;
+      margin: var(--gap) auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+    }
+    .hidden { display: none; }
+
+    /* Catálogo */
+    #catalog {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
+      gap: var(--gap);
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: var(--gap);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform var(--transition);
+    }
+    .card:hover { transform: translateY(-4px); }
+    .card h3 { font-weight: 600; margin-bottom: .5rem; }
+    .card p {
+      flex: 1; font-size: .95rem; margin-bottom: 1rem; color: #555;
+    }
+    .card .price {
+      font-weight: 600; margin-bottom: 1rem; color: var(--primary);
+    }
+    .card button {
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      padding: .65rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 600;
+      transition: background var(--transition);
+    }
+    .card button:hover { background: #3BC4A7; }
+
+    /* Carrinho */
+    #cartSection {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: var(--gap);
+    }
+    #cartSection h2 {
+      margin-bottom: var(--gap);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding: .5rem 0;
+      margin-bottom: .75rem;
+    }
+    .cart-item:last-child {
+      border: none; margin-bottom: 0; padding-bottom: 0;
+    }
+    .cart-item h4 { font-weight: 500; font-size: 1rem; }
+    .cart-item span { font-weight: 600; color: var(--accent); }
+    .cart-item button {
+      background: var(--danger);
+      border: none;
+      color: #fff;
+      padding: .4rem .8rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .cart-item button:hover { background: #D43D65; }
+    #buyCartBtn {
+      width: 100%;
+      padding: .75rem;
+      background: var(--primary);
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    #buyCartBtn:hover { background: #3A7BC4; }
+
+    /* Contatos */
+    #contactsSection h2 {
+      color: var(--primary);
+      margin-bottom: var(--gap);
+      font-weight: 600;
+    }
+    #contactsSection p { margin-bottom: .5rem; }
+
+    /* Forms e Admin */
+    form {
+      background: var(--card-bg);
+      padding: var(--gap);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      max-width: 500px;
+      margin: var(--gap) auto;
+      display: flex;
+      flex-direction: column;
+    }
+    form h3 {
+      text-align: center;
+      margin-bottom: var(--gap);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    form label {
+      margin-bottom: .25rem;
+      font-weight: 500;
+    }
+    form input, form textarea {
+      padding: .6rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: var(--radius);
+      font-size: .95rem;
+    }
+    form textarea {
+      resize: vertical; min-height: 80px;
+    }
+    form button {
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      padding: .75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    form button:hover { background: #3BC4A7; }
+    .list-item {
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .6rem 1rem;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      margin-bottom: .75rem;
+    }
+    .list-item button {
+      background: var(--danger);
+      color: #fff;
+      border: none;
+      padding: .4rem .8rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .list-item button:hover { background: #D43D65; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: var(--gap) 0;
+      background: #fff;
+      border-top: 1px solid #eee;
+      font-size: .9rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho com Navegação -->
+  <header>
+    <h1>Loja de E-Books</h1>
+    <nav>
+      <button onclick="navigate('home')">Home</button>
+      <button onclick="navigate('contacts')">Contatos</button>
+      <button onclick="goAdmin()">Admin</button>
+    </nav>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main>
+
+    <!-- 1. Home: Catálogo + Carrinho -->
+    <section id="homeSection">
+      <div id="catalog" class="grid"></div>
+
+      <div id="cartSection">
+        <h2>Seu Carrinho</h2>
+        <div id="cartList"></div>
+        <button id="buyCartBtn" class="hidden" onclick="buyCart()">Comprar Carrinho</button>
+      </div>
+
+      <p class="signature" onclick="navigate('login')">feito com copilot</p>
+    </section>
+
+    <!-- 2. Contatos -->
+    <section id="contactsSection" class="hidden">
+      <h2>Fale Conosco</h2>
+      <p>Email: suporte@ebooks.com</p>
+      <p>Telefone: (11) 1234-5678</p>
+      <p>Rua das Letras, 123 – São Paulo/SP</p>
+    </section>
+
+    <!-- 3. Login Admin -->
+    <section id="loginSection" class="hidden">
+      <form onsubmit="adminLogin(event)">
+        <h3>Login Admin</h3>
+        <label for="pass">Senha:</label>
+        <input type="password" id="pass" placeholder="digite a senha" required/>
+        <button type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <!-- 4. Painel Admin -->
+    <section id="adminSection" class="hidden">
+      <h2>Painel Administrativo</h2>
+      <button onclick="adminLogout()" style="
+        position:absolute; top:1rem; right:1rem;
+        background: var(--danger); color:#fff; border:none;
+        padding:.5rem 1rem; border-radius:var(--radius);
+        cursor:pointer; transition:background var(--transition);
+      ">Logout</button>
+
+      <!-- Cadastrar Livro Grátis -->
+      <form onsubmit="addBook(event, true)">
+        <h3>Cadastrar Livro Grátis</h3>
+        <label for="freeTitle">Título:</label>
+        <input type="text" id="freeTitle" required/>
+        <label for="freeDesc">Descrição:</label>
+        <textarea id="freeDesc" required></textarea>
+        <label for="freeFile">Arquivo (PDF ou EPUB3):</label>
+        <input type="file" id="freeFile"
+               accept=".pdf,.epub,.epub3,application/pdf,application/epub+zip"
+               required/>
+        <button type="submit">Cadastrar Grátis</button>
+      </form>
+      <h3 style="text-align:center; color:var(--primary);">Livros Gratuitos Cadastrados</h3>
+      <div id="freeList"></div>
+
+      <!-- Cadastrar Livro Pago -->
+      <form onsubmit="addBook(event, false)">
+        <h3>Cadastrar Livro Pago</h3>
+        <label for="paidTitle">Título:</label>
+        <input type="text" id="paidTitle" required/>
+        <label for="paidDesc">Descrição:</label>
+        <textarea id="paidDesc" required></textarea>
+        <label for="paidPrice">Preço (R$):</label>
+        <input type="number" id="paidPrice" step="0.01" required/>
+        <label for="paidCode">Código de Pagamento:</label>
+        <input type="text" id="paidCode" required/>
+        <label for="paidFile">Arquivo (PDF ou EPUB3):</label>
+        <input type="file" id="paidFile"
+               accept=".pdf,.epub,.epub3,application/pdf,application/epub+zip"
+               required/>
+        <button type="submit">Cadastrar Pago</button>
+      </form>
+      <h3 style="text-align:center; color:var(--primary);">Livros Pagos Cadastrados</h3>
+      <div id="paidList"></div>
+    </section>
+
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    &copy; 2025 Loja de E-Books-J e-books
+  </footer>
+
+  <script>
+    // Estado e configuração
+    let ebooks = JSON.parse(localStorage.getItem('ebooks') || '[]');
+    let cart   = [];
+    const ADMIN_PASS = 'jordao';
+
+    // SPA básico
+    function hideAll() {
+      ['home','contacts','login','admin'].forEach(id => {
+        document.getElementById(id + 'Section').classList.add('hidden');
+      });
+    }
+    function navigate(page) {
+      hideAll();
+      document.getElementById(page + 'Section').classList.remove('hidden');
+      if (page === 'home') { renderCatalog(); renderCart(); }
+    }
+    function goAdmin() {
+      // garante logout antes de login
+      sessionStorage.removeItem('isAdmin');
+      navigate('login');
+    }
+
+    // Renderizar catálogo
+    function renderCatalog() {
+      const c = document.getElementById('catalog');
+      c.innerHTML = '';
+      ebooks.forEach(b => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h3>${b.title}</h3>
+          <p>${b.desc}</p>
+          <div class="price">${b.free ? 'Grátis' : 'R$ '+b.price.toFixed(2)}</div>
+          <button onclick="addToCart('${b.id}')">Adicionar ao Carrinho</button>
+        `;
+        c.appendChild(card);
+      });
+    }
+
+    // Carrinho
+    function renderCart() {
+      const list = document.getElementById('cartList');
+      list.innerHTML = '';
+      cart.forEach((b,i) => {
+        const item = document.createElement('div');
+        item.className = 'cart-item';
+        item.innerHTML = `
+          <h4>${b.title}</h4>
+          <span>${b.free ? 'GRÁTIS' : 'R$ '+b.price.toFixed(2)}</span>
+          <button onclick="removeFromCart(${i})">X</button>
+        `;
+        list.appendChild(item);
+      });
+      document.getElementById('buyCartBtn')
+        .classList.toggle('hidden', cart.length === 0);
+    }
+    function addToCart(id) {
+      cart.push(ebooks.find(b=>b.id===id));
+      renderCart();
+    }
+    function removeFromCart(i) {
+      cart.splice(i, 1);
+      renderCart();
+    }
+
+    // Fluxo de compra
+    function buyCart() {
+      if (!cart.length) return;
+      const codes = cart
+        .filter(b=>!b.free)
+        .map(b=>`${b.title}: ${b.paymentCode}`)
+        .join('\n');
+      if (codes) {
+        alert('Para os livros pagos, faça PIX para:\n\n' + codes);
+        alert('Aguardando confirmação de pagamento...');
+      }
+      cart.forEach(download);
+      cart = [];
+      renderCart();
+    }
+    function download(b) {
+      const a = document.createElement('a');
+      a.href     = b.fileData;
+      a.download = b.fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    // Autenticação Admin
+    function adminLogin(e) {
+      e.preventDefault();
+      if (document.getElementById('pass').value === ADMIN_PASS) {
+        sessionStorage.setItem('isAdmin','true');
+        navigate('admin');
+        renderAdmin();
+      } else {
+        alert('Senha incorreta');
+      }
+    }
+    function adminLogout() {
+      sessionStorage.removeItem('isAdmin');
+      navigate('home');
+    }
+
+    // Render e CRUD Admin
+    function renderAdmin() {
+      if (sessionStorage.getItem('isAdmin')!=='true') {
+        navigate('login');
+        return;
+      }
+      const freeList = document.getElementById('freeList');
+      freeList.innerHTML = '';
+      const paidList = document.getElementById('paidList');
+      paidList.innerHTML = '';
+
+      ebooks.forEach(bk => {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `
+          <span>
+            ${bk.title}
+            ${!bk.free ? '— R$ '+bk.price.toFixed(2) : ''}
+            (${bk.fileName})
+          </span>
+          <button onclick="deleteBook('${bk.id}')">Excluir</button>
+        `;
+        if (bk.free) freeList.appendChild(div);
+        else paidList.appendChild(div);
+      });
+    }
+    function addBook(e, free) {
+      e.preventDefault();
+      const id    = Date.now().toString();
+      const title = document.getElementById(free?'freeTitle':'paidTitle').value.trim();
+      const desc  = document.getElementById(free?'freeDesc':'paidDesc').value.trim();
+      const price = free ? 0 : parseFloat(document.getElementById('paidPrice').value);
+      const code  = free ? '' : document.getElementById('paidCode').value.trim();
+      const fileInput = document.getElementById(free?'freeFile':'paidFile');
+      const file = fileInput.files[0];
+      if (!title || !desc || !file || (!free && (!price || !code))) {
+        alert('Preencha todos os campos corretamente.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        ebooks.push({
+          id,
+          title,
+          desc,
+          free,
+          price,
+          paymentCode: code,
+          fileData: reader.result,
+          fileName: file.name
+        });
+        localStorage.setItem('ebooks', JSON.stringify(ebooks));
+        e.target.reset();
+        renderCatalog();
+        renderAdmin();
+      };
+      reader.readAsDataURL(file);
+    }
+    function deleteBook(id) {
+      if (!confirm('Deseja excluir este e-book?')) return;
+      ebooks = ebooks.filter(b=>b.id!==id);
+      localStorage.setItem('ebooks', JSON.stringify(ebooks));
+      renderCatalog();
+      renderAdmin();
+    }
+
+    // Inicialização: limpa login e vai para home
+    window.addEventListener('load', () => {
+      sessionStorage.removeItem('isAdmin');
+      navigate('home');
+    });
+  </script>
+</body>
+</html>
+```
